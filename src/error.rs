@@ -17,6 +17,8 @@ pub enum HelloError {
     IO(#[from] std::io::Error),
     #[error("db error: {0}")]
     Db(#[from] sea_orm::DbErr),
+    #[error("forbidden")]
+    Forbidden,
 }
 
 impl IntoResponse for HelloError {
@@ -26,6 +28,7 @@ impl IntoResponse for HelloError {
             Self::NotFound => StatusCode::NOT_FOUND,
             Self::IO(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::Db(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            Self::Forbidden => StatusCode::FORBIDDEN,
         };
         let body = self.to_string();
         (code, body).into_response()
