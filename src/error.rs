@@ -19,6 +19,8 @@ pub enum HelloError {
     Db(#[from] sea_orm::DbErr),
     #[error("forbidden")]
     Forbidden,
+    #[error("reqwest error: {0}")]
+    Reqwest(#[from] reqwest::Error),
 }
 
 impl IntoResponse for HelloError {
@@ -29,6 +31,7 @@ impl IntoResponse for HelloError {
             Self::IO(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::Db(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::Forbidden => StatusCode::FORBIDDEN,
+            Self::Reqwest(_) => StatusCode::INTERNAL_SERVER_ERROR,
         };
         let body = self.to_string();
         (code, body).into_response()

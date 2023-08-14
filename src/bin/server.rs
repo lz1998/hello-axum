@@ -1,6 +1,7 @@
 use axum::routing::{get, post};
 use axum::{Router, Server};
 use hello_axum::handler::check::{must_login, no_login, optional_login};
+use hello_axum::handler::github::github_info;
 use hello_axum::handler::user::{login, register};
 use hello_axum::{hello, not_found_handler, not_implemented_handler, read_file_handler};
 use std::net::SocketAddr;
@@ -30,6 +31,7 @@ async fn main() {
                 .route("/optional_login", get(optional_login))
                 .route("/no_login", get(no_login)),
         )
+        .route("/github_info", post(github_info))
         .fallback(not_found_handler);
 
     // run it
