@@ -21,6 +21,8 @@ pub enum HelloError {
     Forbidden,
     #[error("reqwest error: {0}")]
     Reqwest(#[from] reqwest::Error),
+    #[error("redis error: {0}")]
+    Redis(#[from] redis::RedisError),
 }
 
 impl IntoResponse for HelloError {
@@ -32,6 +34,7 @@ impl IntoResponse for HelloError {
             Self::Db(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::Forbidden => StatusCode::FORBIDDEN,
             Self::Reqwest(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            Self::Redis(_) => StatusCode::INTERNAL_SERVER_ERROR,
         };
         let body = self.to_string();
         (code, body).into_response()

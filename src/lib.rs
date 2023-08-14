@@ -2,6 +2,7 @@ pub mod api;
 pub mod database;
 pub mod error;
 pub mod handler;
+pub mod redis;
 
 use axum::extract::Query;
 use error::{HelloError, HelloResult};
