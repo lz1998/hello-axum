@@ -15,6 +15,8 @@ pub enum HelloError {
     // 如果错误类型是 srd::io::Error，通过 ? 返回错误时可以自动转换成 HelloError
     #[error("io error: {0}")]
     IO(#[from] std::io::Error),
+    #[error("db error: {0}")]
+    Db(#[from] sea_orm::DbErr),
 }
 
 impl IntoResponse for HelloError {
@@ -23,6 +25,7 @@ impl IntoResponse for HelloError {
             Self::NotImplemented => StatusCode::NOT_IMPLEMENTED,
             Self::NotFound => StatusCode::NOT_FOUND,
             Self::IO(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            Self::Db(_) => StatusCode::INTERNAL_SERVER_ERROR,
         };
         let body = self.to_string();
         (code, body).into_response()
