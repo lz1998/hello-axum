@@ -1,5 +1,6 @@
 pub mod database;
 pub mod error;
+pub mod handler;
 
 use axum::extract::Query;
 use error::{HelloError, HelloResult};

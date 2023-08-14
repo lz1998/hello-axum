@@ -1,5 +1,6 @@
-use axum::routing::get;
+use axum::routing::{get, post};
 use axum::{Router, Server};
+use hello_axum::handler::user::{login, register};
 use hello_axum::{hello, not_found_handler, not_implemented_handler, read_file_handler};
 use std::net::SocketAddr;
 
@@ -14,6 +15,12 @@ async fn main() {
             Router::new()
                 .route("/not_implemented", get(not_implemented_handler))
                 .route("/read_file", get(read_file_handler)),
+        )
+        .nest(
+            "/user",
+            Router::new()
+                .route("/register", post(register))
+                .route("/login", post(login)),
         )
         .fallback(not_found_handler);
 
